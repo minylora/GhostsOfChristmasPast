@@ -1,5 +1,5 @@
 import pytest
-from week1 import week1
+from . import week1
 
 part_one_test_cases = [
     ([5, 1721, 299, 6], 514579),

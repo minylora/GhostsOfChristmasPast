@@ -1,5 +1,4 @@
 from typing import List
-from myutils.myutils import get_int_list
 
 
 # Part 1 - initial solution
@@ -10,6 +9,9 @@ from myutils.myutils import get_int_list
 #             return diff * num
 
 # Part 1 - attempt to account for edge case test ([1010, 1], None)
+from Year_2020_Events.myutils.myutils import get_int_list
+
+
 def find_sum_of_two_and_mult(report: List[int]) -> int:
     for i in range(0, len(report) - 2):
         diff = 2020 - report[i]
