@@ -24,9 +24,12 @@ def part_two_valid_password_counter(pwdb: List[str]) -> int:
         policy_indx_2 = int(values.group(2)) - 1
         policy = values.group(3)
         password = values.group(4)
-        value_two = None
+        #
         if len(password) > policy_indx_2:
-            if password[policy_indx_1] != password[policy_indx_2] and policy in (password[policy_indx_1], password[policy_indx_2]):
+            if password[policy_indx_1] != password[policy_indx_2] and policy in (
+                password[policy_indx_1],
+                password[policy_indx_2],
+            ):
                 num_valid_passwords += 1
         else:
             if policy == password[policy_indx_1]:

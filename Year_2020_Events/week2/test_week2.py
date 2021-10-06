@@ -7,7 +7,16 @@ part_one_valid_password_counter_test_cases = [
     ([], 0),
 ]
 part_two_valid_password_counter_test_cases = [
-    (["1-3 x: a", "2-5 x: xaxxb", "2-9 x: axcdefghx", "2-9 x: abcdefghx", "1-3 x: x"], 2),
+    (
+        [
+            "1-3 x: a",
+            "2-5 x: xaxxb",
+            "2-9 x: axcdefghx",
+            "2-9 x: abcdefghx",
+            "1-3 x: x",
+        ],
+        2,
+    ),
     ([], 0),
 ]
 
