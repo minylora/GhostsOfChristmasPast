@@ -1,5 +1,5 @@
 import pytest
-from week1.week1 import *
+from day1.day1 import *
 
 
 def test_part_one_happy_path():
