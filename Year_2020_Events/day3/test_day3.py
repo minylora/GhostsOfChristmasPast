@@ -1,35 +1,30 @@
+import os
+from sys import path
+
 import pytest
 
 from . import day3
 
-part_one_valid_password_counter_test_cases = [
-    (["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc", "2-9 c: cccccccccc"], 2),
-    ([], 0),
-]
-part_two_valid_password_counter_test_cases = [
-    (
-        [
-            "1-3 x: a",
-            "2-5 x: xaxxb",
-            "2-9 x: axcdefghx",
-            "2-9 x: abcdefghx",
-            "1-3 x: x",
-        ],
-        2,
-    ),
-    ([], 0),
-]
+from Year_2020_Events.myutils.myutils import get_str_list
 
 
-@pytest.mark.parametrize(
-    "pwdb_list,expected_result", part_one_valid_password_counter_test_cases
-)
-def test_part_one_valid_password_counter(pwdb_list, expected_result):
-    assert day3.part_one_valid_password_counter(pwdb_list) == expected_result
+@pytest.fixture
+def slope_map_sample():
+    fpath = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(fpath, "sample_input.txt")
+    return get_str_list(filename)
 
 
-@pytest.mark.parametrize(
-    "pwdb_list,expected_result", part_two_valid_password_counter_test_cases
-)
-def test_part_two_valid_password_counter(pwdb_list, expected_result):
-    assert day3.part_two_valid_password_counter(pwdb_list) == expected_result
+@pytest.fixture
+def slope_map_input():
+    fpath = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(fpath, "input.txt")
+    return get_str_list(filename)
+
+
+def test_how_many_tress_for_part_one_with_sample_input(slope_map_sample):
+    assert day3.how_many_tress_for_part_one(slope_map_sample) == 7
+
+
+def test_how_many_tress_for_part_one_with_input(slope_map_input):
+    assert day3.how_many_tress_for_part_one(slope_map_input) == 187
