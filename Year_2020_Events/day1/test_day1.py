@@ -1,5 +1,5 @@
 import pytest
-from . import week1
+from . import day1
 
 part_one_test_cases = [
     ([5, 1721, 299, 6], 514579),
@@ -21,9 +21,9 @@ part_two_test_cases = [
 
 @pytest.mark.parametrize("part_one_report,part_one_result", part_one_test_cases)
 def test_part_one_example(part_one_report, part_one_result):
-    assert week1.find_sum_of_two_and_mult(part_one_report) == part_one_result
+    assert day1.find_sum_of_two_and_mult(part_one_report) == part_one_result
 
 
 @pytest.mark.parametrize("part_two_report,part_two_result", part_two_test_cases)
 def test_part_two_example(part_two_report, part_two_result):
-    assert week1.find_sum_of_three_and_mult(part_two_report) == part_two_result
+    assert day1.find_sum_of_three_and_mult(part_two_report) == part_two_result
