@@ -27,11 +27,13 @@ def how_many_trees_for_single_slope(slope_map: List[str], right: int, down: int)
     return num_trees
 
 
-def how_many_trees_for_multiple_slopes_multiplied(slope_map: List[str], slopes: List[tuple]):
+def how_many_trees_for_multiple_slopes_multiplied(
+    slope_map: List[str], slopes: List[tuple]
+):
     num_trees_multiplied = 1
     for right, down in slopes:
         num_trees_for_slope = how_many_trees_for_single_slope(slope_map, right, down)
-        num_trees_multiplied = num_trees_multiplied*num_trees_for_slope
+        num_trees_multiplied = num_trees_multiplied * num_trees_for_slope
     return num_trees_multiplied
 
 
