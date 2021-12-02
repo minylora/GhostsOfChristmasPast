@@ -1,6 +1,6 @@
 from typing import List
 
-from Year_2021_Events.myutils.myutils import get_int_list
+from Year_2020_Events.myutils.myutils import get_int_list
 
 
 def get_sliding_window(measurements: List[int]) -> List[int]:
