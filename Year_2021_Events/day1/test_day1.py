@@ -7,7 +7,9 @@ expected_sliding_window_values = [607, 618, 618, 617, 647, 716, 769, 792]
 
 def test_part_one():
     expected_result = 7
-    assert day1.how_many_are_larger_than_the_previous(test_measurements) == expected_result
+    assert (
+        day1.how_many_are_larger_than_the_previous(test_measurements) == expected_result
+    )
 
 
 def test_part_two_sliding_win_math():
@@ -16,4 +18,7 @@ def test_part_two_sliding_win_math():
 
 def test_part_two():
     expected_result = 5
-    assert day1.how_many_are_larger_than_the_previous(expected_sliding_window_values) == expected_result
+    assert (
+        day1.how_many_are_larger_than_the_previous(expected_sliding_window_values)
+        == expected_result
+    )
