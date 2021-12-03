@@ -3,17 +3,22 @@ from typing import List
 from Year_2020_Events.myutils.myutils import get_str_list
 
 
+def get_change_in_course(change: str) -> (str, int):
+    change_value = change.split()
+    return change_value[0].lower(), int(change_value[1])
+
+
 def get_multiplied_location(course: List[str]) -> int:
     depth = 0
     horizontal = 0
     for change in course:
-        change_value = change.split()
-        if change_value[0].lower() == "forward":
-            horizontal += int(change_value[1])
-        elif change_value[0].lower() == "down":
-            depth += int(change_value[1])
+        direction, amount = get_change_in_course(change)
+        if direction == "forward":
+            horizontal += amount
+        elif direction == "down":
+            depth += amount
         else:
-            depth -= int(change_value[1])
+            depth -= amount
     return depth*horizontal
 
 
@@ -22,14 +27,14 @@ def get_multiplied_location_with_aim(course):
     depth = 0
     horizontal = 0
     for change in course:
-        change_value = change.split()
-        if change_value[0].lower() == "forward":
-            horizontal += int(change_value[1])
-            depth += aim*int(change_value[1])
-        elif change_value[0].lower() == "down":
-            aim += int(change_value[1])
+        direction, amount = get_change_in_course(change)
+        if direction == "forward":
+            horizontal += amount
+            depth += aim*amount
+        elif direction == "down":
+            aim += amount
         else:
-            aim -= int(change_value[1])
+            aim -= amount
     return depth*horizontal
 
 
