@@ -18,3 +18,9 @@ def test_get_course_change():
     test_change = "forward 5"
     expected_result = ("forward", 5)
     assert day2.get_course_change(test_change) == expected_result
+
+
+def test_get_course_change_error():
+    test_change = "dne 5"
+    with pytest.raises(ValueError):
+        _ = day2.get_course_change(test_change)

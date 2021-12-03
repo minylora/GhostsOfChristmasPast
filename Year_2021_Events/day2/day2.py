@@ -1,11 +1,18 @@
-from typing import List
+from typing import List, Literal
 
 from Year_2020_Events.myutils.myutils import get_str_list
 
 
-def get_course_change(change: str) -> (str, int):
-    change_value = change.split()
-    return change_value[0].lower(), int(change_value[1])
+VALID_DIRECTIONS = ["up", "down", "forward"]
+
+
+def get_course_change(change: str) -> (Literal["up", "down", "forward"], int):
+    change_value = change.split(" ", 1)
+    direction = change_value[0].lower()
+    amount = int(change_value[1])
+    if direction not in VALID_DIRECTIONS:
+        raise ValueError
+    return direction, amount
 
 
 def get_multiplied_location(course: List[str]) -> int:
