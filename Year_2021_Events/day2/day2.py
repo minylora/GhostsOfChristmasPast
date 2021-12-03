@@ -19,7 +19,7 @@ def get_multiplied_location(course: List[str]) -> int:
             depth += amount
         else:
             depth -= amount
-    return depth*horizontal
+    return depth * horizontal
 
 
 def get_multiplied_location_with_aim(course):
@@ -30,12 +30,12 @@ def get_multiplied_location_with_aim(course):
         direction, amount = get_course_change(change)
         if direction == "forward":
             horizontal += amount
-            depth += aim*amount
+            depth += aim * amount
         elif direction == "down":
             aim += amount
         else:
             aim -= amount
-    return depth*horizontal
+    return depth * horizontal
 
 
 def main():
