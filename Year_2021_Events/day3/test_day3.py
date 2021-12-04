@@ -17,16 +17,11 @@ test_report = [
 ]
 
 
-def test_calculate_gamma_rate():
-    expected = 22
-    assert day3.calculate_gamma_rate(test_report) == expected
-
-
-def test_calculate_epsilon_rate():
-    expected = 9
-    assert day3.calculate_epsilon_rate(test_report) == expected
-
-
 def test_get_power_consumption():
-    expected = 9*22
+    expected = 198
     assert day3.get_power_consumption(test_report) == expected
+
+
+def test_get_life_support_rating():
+    expected = 230
+    assert day3.get_life_support_rating(test_report) == expected
