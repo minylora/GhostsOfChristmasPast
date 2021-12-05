@@ -1,8 +1,6 @@
 from typing import List, Optional
 import copy
 
-from Year_2020_Events.myutils.myutils import get_str_list
-
 
 def get_bingo_game(filename: str) -> (List[int], List[List[int]]):
     f = open(filename, "r")
@@ -118,7 +116,6 @@ def calculate_part_two_answer(
                 row_vals = [x for x in row if x is not None]
                 # add sum to current sum
                 total += sum(row_vals)
-                print(game_boards)
             # return multiplied values
             return draw * total
 
@@ -127,17 +124,16 @@ def calculate_part_two_answer(
         # Assume there is a single last board that is the last win
         while len(winner) > 0:
             # Remove the winning board
-            game_boards = game_boards[:loc] + game_boards[loc + 5:]
+            game_boards = game_boards[:loc] + game_boards[loc + 5 :]
             # Check if winners still remain
             winner, loc = get_winning_board(game_boards)
     return None
 
 
 def main():
-    # drawn_nums, all_boards = get_bingo_game("day4_input.txt")
-    # part_one = calculate_part_one_answer(drawn_nums, all_boards)
-    # print(part_one)
-    drawn_nums, all_boards = get_bingo_game("day4_input_2.txt")
+    drawn_nums, all_boards = get_bingo_game("day4_input.txt")
+    part_one = calculate_part_one_answer(drawn_nums, all_boards)
+    print(part_one)
     part_two = calculate_part_two_answer(drawn_nums, all_boards)
     print(part_two)
 
