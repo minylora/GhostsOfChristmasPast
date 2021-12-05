@@ -119,12 +119,16 @@ def calculate_part_two_answer(
             winner, loc = get_winning_board(game_boards)
 
         # Keep the last board
-        if len(game_boards) == 6:
+        if len(game_boards) == 5:
+            # calculate sum of values that exist
             total = 0
             for row in game_boards:
+                # drop all nulls
                 row_vals = [x for x in row if x is not None]
+                # add sum to current sum
                 total += sum(row_vals)
-            return draw*total
+            # return multiplied values
+            return draw * total
     return multiplier * sum_multiplier
 
 
