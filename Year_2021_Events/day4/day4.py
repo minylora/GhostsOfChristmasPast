@@ -96,29 +96,17 @@ def calculate_part_one_answer(
 
 def calculate_part_two_answer(
     drawn_nums: List[int], all_boards: List[List[int]]
-) -> int:
+) -> Optional[int]:
 
     game_boards = copy.deepcopy(all_boards)
-    multiplier = 0
-    sum_multiplier = 0
 
-    # Run through the game in order of draws list
+    # Run through the game in order of the draws list
     for draw in drawn_nums:
 
         # Update all the boards
         game_boards = update_all_bingo_boards(draw, game_boards)
 
-        # Check if there is a winner
-        winner, loc = get_winning_board(game_boards)
-
-        # If there is winner, remove it from board choices
-        # Keep removing winners from this point in the game
-        # This method assumes the last win includes only one board
-        while len(winner) > 0:
-            game_boards = game_boards[:loc] + game_boards[loc + 5:]
-            winner, loc = get_winning_board(game_boards)
-
-        # Keep the last board
+        # Check if only one board remains
         if len(game_boards) == 5:
             # calculate sum of values that exist
             total = 0
@@ -127,16 +115,29 @@ def calculate_part_two_answer(
                 row_vals = [x for x in row if x is not None]
                 # add sum to current sum
                 total += sum(row_vals)
+                print(game_boards)
             # return multiplied values
             return draw * total
-    return multiplier * sum_multiplier
+
+        # Check if there is a winner
+        winner, loc = get_winning_board(game_boards)
+
+        # If there is winner, remove it from board choices
+        # Keep removing winners from the current draw until there are none
+        # Assume there is a single last board that is the last win
+        while len(winner) > 0:
+            # Remove the winning board
+            game_boards = game_boards[:loc] + game_boards[loc + 5:]
+            # Check if winners still remain
+            winner, loc = get_winning_board(game_boards)
+    return None
 
 
 def main():
     # drawn_nums, all_boards = get_bingo_game("day4_input.txt")
     # part_one = calculate_part_one_answer(drawn_nums, all_boards)
     # print(part_one)
-    drawn_nums, all_boards = get_bingo_game("day4_input.txt")
+    drawn_nums, all_boards = get_bingo_game("day4_input_2.txt")
     part_two = calculate_part_two_answer(drawn_nums, all_boards)
     print(part_two)
 
