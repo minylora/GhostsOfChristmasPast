@@ -106,8 +106,11 @@ def calculate_part_two_answer(
         # Update all the boards
         game_boards = update_all_bingo_boards(draw, game_boards)
 
+        # Check if there is a winner
+        winner, loc = get_winning_board(game_boards)
+
         # Check if only one board remains
-        if len(game_boards) == 5:
+        if len(winner) > 0 and len(game_boards) == 5:
             # calculate sum of values that exist
             total = 0
             for row in game_boards:
@@ -118,9 +121,6 @@ def calculate_part_two_answer(
                 print(game_boards)
             # return multiplied values
             return draw * total
-
-        # Check if there is a winner
-        winner, loc = get_winning_board(game_boards)
 
         # If there is winner, remove it from board choices
         # Keep removing winners from the current draw until there are none
