@@ -13,7 +13,7 @@ def get_bingo_game(filename: str) -> (List[int], List[List[int]]):
     # create list of drawn numbers
     drawn_numbers = [int(i) for i in drawn_numbers]
 
-    # create the bingo board
+    # create the bingo boards
     bingo_boards = []
     board_numbers = [int(i) for i in board_numbers]
     cols = range(0, len(board_numbers), 5)
@@ -25,12 +25,15 @@ def get_bingo_game(filename: str) -> (List[int], List[List[int]]):
 def update_bingo_board(
     drawn_number: int, bingo_board: List[List[int]]
 ) -> List[List[int]]:
-    new_bingo_board = copy.deepcopy(bingo_board)
     if len(bingo_board) != 5 or len(bingo_board[0]) != 5:
         raise TypeError
+
+    new_bingo_board = copy.deepcopy(bingo_board)
     five = range(0, 5)
+    # Check every value for the drawn number
     for row in five:
         for col in five:
+            # if the drawn number exists, change the value to None, and exit
             if bingo_board[row][col] == drawn_number:
                 new_bingo_board[row][col] = None
                 return new_bingo_board
@@ -40,10 +43,9 @@ def update_bingo_board(
 def update_all_bingo_boards(
     drawn_number: int, all_bingo_boards: List[List[int]]
 ) -> List[List[int]]:
-    boards = copy.deepcopy(all_bingo_boards)
     all_updated_bingo_boards = []
-    for row in range(0, len(boards), 5):
-        bingo_board = boards[row : row + 5]
+    for row in range(0, len(all_bingo_boards), 5):
+        bingo_board = all_bingo_boards[row : row + 5]
         updated_board = update_bingo_board(drawn_number, bingo_board)
         all_updated_bingo_boards = all_updated_bingo_boards + updated_board
     return all_updated_bingo_boards
@@ -69,9 +71,8 @@ def board_is_a_winner(bingo_board: List[List[int]]) -> bool:
 
 
 def get_winning_board(all_bingo_boards: List[List[int]]) -> (List[List[int]], int):
-    boards = copy.deepcopy(all_bingo_boards)
-    for row in range(0, len(boards), 5):
-        bingo_board = boards[row : row + 5]
+    for row in range(0, len(all_bingo_boards), 5):
+        bingo_board = all_bingo_boards[row : row + 5]
         if board_is_a_winner(bingo_board):
             return bingo_board, row
     return [], 0
@@ -96,31 +97,41 @@ def calculate_part_one_answer(
 def calculate_part_two_answer(
     drawn_nums: List[int], all_boards: List[List[int]]
 ) -> int:
+
     game_boards = copy.deepcopy(all_boards)
     multiplier = 0
     sum_multiplier = 0
+
+    # Run through the game in order of draws list
     for draw in drawn_nums:
+
+        # Update all the boards
         game_boards = update_all_bingo_boards(draw, game_boards)
+
+        # Check if there is a winner
         winner, loc = get_winning_board(game_boards)
-        if len(winner) > 0:
-            game_boards = game_boards[:loc] + game_boards[loc + 5 :]
-        if len(game_boards) == 5:
+
+        # If there is winner, remove it from board choices
+        # Keep removing winners from this point in the game
+        # This method assumes the last win includes only one board
+        while len(winner) > 0:
+            game_boards = game_boards[:loc] + game_boards[loc + 5:]
+            winner, loc = get_winning_board(game_boards)
+
+        # Keep the last board
+        if len(game_boards) == 6:
             total = 0
             for row in game_boards:
                 row_vals = [x for x in row if x is not None]
                 total += sum(row_vals)
-            multiplier = draw
-            sum_multiplier = total
-            print(multiplier)
-            print(sum_multiplier)
-            break
+            return draw*total
     return multiplier * sum_multiplier
 
 
 def main():
-    drawn_nums, all_boards = get_bingo_game("day4_input.txt")
-    part_one = calculate_part_one_answer(drawn_nums, all_boards)
-    print(part_one)
+    # drawn_nums, all_boards = get_bingo_game("day4_input.txt")
+    # part_one = calculate_part_one_answer(drawn_nums, all_boards)
+    # print(part_one)
     drawn_nums, all_boards = get_bingo_game("day4_input.txt")
     part_two = calculate_part_two_answer(drawn_nums, all_boards)
     print(part_two)
