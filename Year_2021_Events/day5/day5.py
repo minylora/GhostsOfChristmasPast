@@ -44,9 +44,9 @@ def get_max_x(coordinates: List[List[List[int]]]) -> int:
     max_x = 0
     for coord in coordinates:
         if coord[0][0] > max_x:
-            max_x = coord[0][1]
+            max_x = coord[0][0]
         if coord[1][0] > max_x:
-            max_x = coord[1][1]
+            max_x = coord[1][0]
     return max_x
 
 
@@ -80,14 +80,11 @@ def update_diagram_horizontally(diagram: List[List[int]], horiz_coords: List[Lis
 
 def update_diagram_vertically(diagram: List[List[int]], vert_coords: List[List[List[int]]]) -> List[List[int]]:
     updated_diagram = copy.deepcopy(diagram)
-    print(len(vert_coords))
     for line in vert_coords:
-        print(line)
         x = line[0][0]
         y1 = line[0][1]
         y2 = line[1][1]
         for i in range(y1, y2+1):
-            print(f'x: {x}, y1: {y1}, y2: {y2}, i: {i}')
             updated_diagram[i][x] += 1
     return updated_diagram
 
