@@ -1,3 +1,4 @@
+import copy
 import re
 from typing import List
 
@@ -14,6 +15,25 @@ DIAGRAM_TYPE = "List[List[int]]"
 # # does not care if map is square or rectangle
 # # part one - horiz and vert are included and diag are not included
 # # coordinates is reading in the entire file
+
+
+def deep_copy_coordinates(coordinates: COORDINATE_LIST_TYPE) -> COORDINATE_LIST_TYPE:
+    copied_coords = []
+    for coord_set in range(0, len(coordinates)):
+        new_coord_set = deep_copy_diagram(coordinates[coord_set])
+        copied_coords.append(new_coord_set)
+    return copied_coords
+
+
+def deep_copy_diagram(diagram: DIAGRAM_TYPE) -> DIAGRAM_TYPE:
+    copied_diagram = [[0] * len(diagram[0]) for y in range(0, len(diagram))]
+    diagram_len = len(diagram)
+    diagram_width = len(diagram[0])
+    for row in range(0, diagram_len):
+        for col in range(0, diagram_width):
+            # print(row, col, diagram_width)
+            copied_diagram[row][col] = diagram[row][col]
+    return copied_diagram
 
 
 def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
@@ -37,6 +57,8 @@ def get_horizontal_lines_from_coordinates(
         start_y = coord[0][1]
         end_y = coord[1][1]
         if start_y == end_y:
+            if start_x == end_x:
+                raise ValueError
             if start_x > end_x:
                 temp = start_x
                 start_x = end_x
@@ -103,25 +125,27 @@ def create_diagram(coordinates: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
 def update_diagram_horizontally(
     diagram: DIAGRAM_TYPE, horiz_coords: COORDINATE_LIST_TYPE
 ) -> DIAGRAM_TYPE:
+    updated_d = deep_copy_diagram(diagram)
     for line in horiz_coords:
         x1 = line[0][0]
         x2 = line[1][0]
         y = line[0][1]
         for x in range(x1, x2 + 1):
-            diagram[y][x] = diagram[y][x] + 1
-    return diagram
+            updated_d[y][x] = updated_d[y][x] + 1
+    return updated_d
 
 
 def update_diagram_vertically(
     diagram: DIAGRAM_TYPE, vert_coords: COORDINATE_LIST_TYPE
 ) -> DIAGRAM_TYPE:
+    updated_d = deep_copy_diagram(diagram)
     for line in vert_coords:
         x = line[0][0]
         y1 = line[0][1]
         y2 = line[1][1]
         for y in range(y1, y2 + 1):
-            diagram[y][x] = diagram[y][x] + 1
-    return diagram
+            updated_d[y][x] = updated_d[y][x] + 1
+    return updated_d
 
 
 def calculate_part_one_answer(filename: str) -> int:
@@ -129,23 +153,29 @@ def calculate_part_one_answer(filename: str) -> int:
     diagram = create_diagram(all_coords)
 
     horiz = get_horizontal_lines_from_coordinates(all_coords)
-    diagram = update_diagram_horizontally(diagram, horiz)
-
     vert = get_vertical_lines_from_coordinates(all_coords)
-    diagram = update_diagram_vertically(diagram, vert)
 
-    print(diagram)
-
+    diagram = update_diagram_horizontally(diagram=diagram, horiz_coords=horiz)
     count = 0
-    for row in range(0, len(diagram)):
-        for col in range(0, len(diagram[0])):
-            if diagram[row][col] >= 2:
+    for row in diagram:
+        for col in row:
+            if col >= 2:
                 count = count + 1
+    print(count)
+
+    diagram = update_diagram_vertically(diagram=diagram, vert_coords=vert)
+    count = 0
+    for row in diagram:
+        for col in row:
+            if col >= 2:
+                count = count + 1
+    print(count)
+    print(diagram)
     return count
 
 
 def main():
-    part_one = calculate_part_one_answer("mini_vents")
+    part_one = calculate_part_one_answer("day5_input.txt")
     print(part_one)
 
 
