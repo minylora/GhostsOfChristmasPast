@@ -4,8 +4,20 @@ from typing import List
 
 from Year_2020_Events.myutils.myutils import get_str_list
 
+COORDINATE_LIST_TYPE = "List[List[List[int]]]"
+DIAGRAM_TYPE = "List[List[int]]"
 
-def get_vent_coordinates(filename: str) -> List[List[List[int]]]:
+# why ans wrong :( - things to consider
+# # points (instead of lines) - would duplicate, so ans would be bigger not smaller
+# # accounts for + crossing points because of house line crossing is tracked
+# # regex doesnt care how many digits the coords are
+# # coords are rearranged so [start, end] always has start as smaller values
+# # does not care if map is square or rectangle
+# # part one - horiz and vert are included and diag are not included
+# # 
+
+
+def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
     str_list = get_str_list(filename)
     vent_coords = []
     for line in str_list:
@@ -16,7 +28,7 @@ def get_vent_coordinates(filename: str) -> List[List[List[int]]]:
     return vent_coords
 
 
-def get_horizontal_lines_from_coordinates(coordinates: List[List[List[int]]]) -> List[List[List[int]]]:
+def get_horizontal_lines_from_coordinates(coordinates: COORDINATE_LIST_TYPE) -> COORDINATE_LIST_TYPE:
     horizontal_lines = []
     for coord in coordinates:
         if coord[0][1] == coord[1][1]:
@@ -28,7 +40,7 @@ def get_horizontal_lines_from_coordinates(coordinates: List[List[List[int]]]) ->
     return horizontal_lines
 
 
-def get_vertical_lines_from_coordinates(coordinates: List[List[List[int]]]) -> List[List[List[int]]]:
+def get_vertical_lines_from_coordinates(coordinates: COORDINATE_LIST_TYPE) -> COORDINATE_LIST_TYPE:
     vertical_lines = []
     for coord in coordinates:
         if coord[0][0] == coord[1][0]:
@@ -40,7 +52,7 @@ def get_vertical_lines_from_coordinates(coordinates: List[List[List[int]]]) -> L
     return vertical_lines
 
 
-def get_max_x(coordinates: List[List[List[int]]]) -> int:
+def get_max_x(coordinates: COORDINATE_LIST_TYPE) -> int:
     max_x = 0
     for coord in coordinates:
         if coord[0][0] > max_x:
@@ -50,7 +62,7 @@ def get_max_x(coordinates: List[List[List[int]]]) -> int:
     return max_x
 
 
-def get_max_y(coordinates: List[List[List[int]]]) -> int:
+def get_max_y(coordinates: COORDINATE_LIST_TYPE) -> int:
     max_y = 0
     for coord in coordinates:
         if coord[0][1] > max_y:
@@ -60,14 +72,14 @@ def get_max_y(coordinates: List[List[List[int]]]) -> int:
     return max_y
 
 
-def create_diagram(coordinates: List[List[List[int]]]) -> List[List[int]]:
+def create_diagram(coordinates: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
     x_len = get_max_x(coordinates) + 1
     y_len = get_max_y(coordinates) + 1
     diagram = [[0] * x_len for y in range(0, y_len)]
     return diagram
 
 
-def update_diagram_horizontally(diagram: List[List[int]], horiz_coords: List[List[List[int]]]) -> List[List[int]]:
+def update_diagram_horizontally(diagram: DIAGRAM_TYPE, horiz_coords: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
     updated_diagram = copy.deepcopy(diagram)
     for line in horiz_coords:
         x1 = line[0][0]
@@ -78,7 +90,7 @@ def update_diagram_horizontally(diagram: List[List[int]], horiz_coords: List[Lis
     return updated_diagram
 
 
-def update_diagram_vertically(diagram: List[List[int]], vert_coords: List[List[List[int]]]) -> List[List[int]]:
+def update_diagram_vertically(diagram: DIAGRAM_TYPE, vert_coords: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
     updated_diagram = copy.deepcopy(diagram)
     for line in vert_coords:
         x = line[0][0]
