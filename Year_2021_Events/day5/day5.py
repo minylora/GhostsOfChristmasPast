@@ -1,4 +1,3 @@
-import copy
 import re
 from typing import List
 
@@ -104,27 +103,25 @@ def create_diagram(coordinates: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
 def update_diagram_horizontally(
     diagram: DIAGRAM_TYPE, horiz_coords: COORDINATE_LIST_TYPE
 ) -> DIAGRAM_TYPE:
-    updated_diagram = copy.deepcopy(diagram)
     for line in horiz_coords:
         x1 = line[0][0]
         x2 = line[1][0]
         y = line[0][1]
         for x in range(x1, x2 + 1):
-            updated_diagram[y][x] += 1
-    return updated_diagram
+            diagram[y][x] += 1
+    return diagram
 
 
 def update_diagram_vertically(
     diagram: DIAGRAM_TYPE, vert_coords: COORDINATE_LIST_TYPE
 ) -> DIAGRAM_TYPE:
-    updated_diagram = copy.deepcopy(diagram)
     for line in vert_coords:
         x = line[0][0]
         y1 = line[0][1]
         y2 = line[1][1]
         for y in range(y1, y2 + 1):
-            updated_diagram[y][x] += 1
-    return updated_diagram
+            diagram[y][x] += 1
+    return diagram
 
 
 def calculate_part_one_answer(filename: str) -> int:
@@ -132,21 +129,23 @@ def calculate_part_one_answer(filename: str) -> int:
     diagram = create_diagram(all_coords)
 
     horiz = get_horizontal_lines_from_coordinates(all_coords)
-    diagram_horiz = update_diagram_horizontally(diagram, horiz)
+    diagram = update_diagram_horizontally(diagram, horiz)
 
     vert = get_vertical_lines_from_coordinates(all_coords)
-    updated_diagram = update_diagram_vertically(diagram_horiz, vert)
+    diagram = update_diagram_vertically(diagram, vert)
+
+    print(diagram)
 
     count = 0
-    for row in updated_diagram:
-        for col in row:
-            if col >= 2:
+    for row in range(0, len(diagram)):
+        for col in range(0, len(diagram[0])):
+            if diagram[row][col] >= 2:
                 count += 1
     return count
 
 
 def main():
-    part_one = calculate_part_one_answer("day5_input.txt")
+    part_one = calculate_part_one_answer("mini_vents")
     print(part_one)
 
 

@@ -25,7 +25,8 @@ def test_get_vertical_lines_from_coordinates():
     coordinates = day5.get_vertical_lines_from_coordinates(vent_coords)
     assert len(coordinates) == 2
     assert coordinates[0] == [[2, 1], [2, 2]]
-    assert coordinates[1] == [[7, 0], [7, 4]]
+    assert coordinates[1] == [[7, 0], [7, 6]]
+    assert coordinates[1] == [[7, 3], [7, 7]]
 
 
 def test_get_max_x():
@@ -63,4 +64,4 @@ def test_update_diagram_vertically():
 
 
 def test_calculate_part_one_answer():
-    assert day5.calculate_part_one_answer(mini_vents) == 5
+    assert day5.calculate_part_one_answer(mini_vents) == 8
