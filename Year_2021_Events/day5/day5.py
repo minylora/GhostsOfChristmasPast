@@ -1,5 +1,6 @@
 import copy
 import re
+import itertools as it
 from typing import List
 
 from Year_2020_Events.myutils.myutils import get_str_list
@@ -78,9 +79,9 @@ def get_vertical_lines_from_coordinates(
         end_x = coord[1][0]
         end_y = coord[1][1]
         # if x does not change, then its a vert line
-        print(start_x, end_x)
+        # print(start_x, end_x)
         if start_x == end_x:
-            print(coord)
+            # print(coord)
             # check if they are in order
             if start_y > end_y:
                 temp = start_y
@@ -167,7 +168,7 @@ def calculate_part_one_answer(filename: str) -> int:
         for col in row:
             if col >= 2:
                 count = count + 1
-    print(count)
+    # print(count)
 
     diagram = update_diagram_vertically(diagram=diagram, vert_coords=vert)
     count = 0
@@ -175,7 +176,7 @@ def calculate_part_one_answer(filename: str) -> int:
         for col in row:
             if col >= 2:
                 count = count + 1
-    print(count)
+    # print(count)
 
     # all_coords = get_vent_coordinates(filename)
     # vert = get_vertical_lines_from_coordinates(all_coords)
@@ -186,9 +187,60 @@ def calculate_part_one_answer(filename: str) -> int:
     return count
 
 
+def update_diagram_diagonals(diagram, coordinates):
+    update = deep_copy_diagram(diagram)
+
+    for coord in coordinates:
+        x1 = coord[0][0]
+        y1 = coord[0][1]
+        x2 = coord[1][0]
+        y2 = coord[1][1]
+
+        if x1 == x2 or y1 == y2:
+            continue
+        else:
+            x_vals = [i for i in range(min(x1, x2), max(x1, x2) + 1)]
+            y_vals = [i for i in range(min(y1, y2), max(y1, y2) + 1)]
+
+            if not ((x1 < x2 and y1 < y2) or (x1 > x2 and y1 > y2)):
+                y_vals = y_vals[::-1]
+
+            for x, y in zip(x_vals, y_vals):
+                update[y][x] = update[y][x] + 1
+    return update
+
+
+def part_two(filename):
+    coords = get_vent_coordinates(filename)
+    diagram = create_diagram(coords)
+
+    vert = get_vertical_lines_from_coordinates(coords)
+    horiz =get_horizontal_lines_from_coordinates(coords)
+
+    diagram = update_diagram_vertically(diagram, vert)
+    diagram = update_diagram_horizontally(diagram, horiz)
+
+    count = 0
+    for row in diagram:
+        for col in row:
+            if col >= 2:
+                count = count + 1
+    print(count)
+
+    diagram = update_diagram_diagonals(diagram, coords)
+
+    count = 0
+    for row in diagram:
+        for col in row:
+            if col >= 2:
+                count = count + 1
+    return count
+
+
 def main():
     part_one = calculate_part_one_answer("day5_input.txt")
     print(part_one)
+    print(part_two("day5_input.txt"))
 
 
 if __name__ == "__main__":
