@@ -13,7 +13,7 @@ DIAGRAM_TYPE = "List[List[int]]"
 # # coords are rearranged so [start, end] always has start as smaller values
 # # does not care if map is square or rectangle
 # # part one - horiz and vert are included and diag are not included
-# #
+# # coordinates is reading in the entire file
 
 
 def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
@@ -108,7 +108,7 @@ def update_diagram_horizontally(
         x2 = line[1][0]
         y = line[0][1]
         for x in range(x1, x2 + 1):
-            diagram[y][x] += 1
+            diagram[y][x] = diagram[y][x] + 1
     return diagram
 
 
@@ -120,7 +120,7 @@ def update_diagram_vertically(
         y1 = line[0][1]
         y2 = line[1][1]
         for y in range(y1, y2 + 1):
-            diagram[y][x] += 1
+            diagram[y][x] = diagram[y][x] + 1
     return diagram
 
 
@@ -140,7 +140,7 @@ def calculate_part_one_answer(filename: str) -> int:
     for row in range(0, len(diagram)):
         for col in range(0, len(diagram[0])):
             if diagram[row][col] >= 2:
-                count += 1
+                count = count + 1
     return count
 
 

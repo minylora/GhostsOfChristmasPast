@@ -6,7 +6,7 @@ vent_coords = day5.get_vent_coordinates(mini_vents)
 
 
 def test_get_vent_coordinates():
-    assert len(vent_coords) == 10
+    assert len(vent_coords) == 11
     assert len(vent_coords[0]) == 2
     assert len(vent_coords[0][1]) == 2
     assert vent_coords[9] == [[5, 5], [8, 2]]
@@ -23,10 +23,10 @@ def test_get_horizontal_lines_from_coordinates():
 
 def test_get_vertical_lines_from_coordinates():
     coordinates = day5.get_vertical_lines_from_coordinates(vent_coords)
-    assert len(coordinates) == 2
+    assert len(coordinates) == 3
     assert coordinates[0] == [[2, 1], [2, 2]]
     assert coordinates[1] == [[7, 0], [7, 6]]
-    assert coordinates[1] == [[7, 3], [7, 7]]
+    assert coordinates[2] == [[7, 3], [7, 7]]
 
 
 def test_get_max_x():
