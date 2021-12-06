@@ -40,7 +40,7 @@ def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
     str_list = get_str_list(filename)
     vent_coords = []
     for line in str_list:
-        values = re.search(r"(\d+),(\d+).+(\d+),(\d+)", line)
+        values = re.search(r"(\d+),(\d+)\s+->\s+(\d+),(\d+)", line)
         start = [int(values.group(1)), int(values.group(2))]
         end = [int(values.group(3)), int(values.group(4))]
         vent_coords.append([start, end])
@@ -74,16 +74,20 @@ def get_vertical_lines_from_coordinates(
     vertical_lines = []
     for coord in coordinates:
         start_x = coord[0][0]
-        end_x = coord[1][0]
         start_y = coord[0][1]
+        end_x = coord[1][0]
         end_y = coord[1][1]
+        # if x does not change, then its a vert line
+        print(start_x, end_x)
         if start_x == end_x:
+            print(coord)
+            # check if they are in order
             if start_y > end_y:
                 temp = start_y
                 start_y = end_y
                 end_y = temp
-            line_coord = [[start_x, start_y], [end_x, end_y]]
-            vertical_lines.append(line_coord)
+            this_coord = [[start_x, start_y], [end_x, end_y]]
+            vertical_lines.append(this_coord)
     return vertical_lines
 
 
@@ -172,7 +176,13 @@ def calculate_part_one_answer(filename: str) -> int:
             if col >= 2:
                 count = count + 1
     print(count)
-    print(len(vert))
+
+    # all_coords = get_vent_coordinates(filename)
+    # vert = get_vertical_lines_from_coordinates(all_coords)
+    # horiz = get_horizontal_lines_from_coordinates(all_coords)
+    # print(len(horiz), len(vert))
+    # count = 0
+
     return count
 
 
