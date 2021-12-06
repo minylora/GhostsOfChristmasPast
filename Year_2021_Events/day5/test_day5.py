@@ -25,7 +25,7 @@ def test_get_vertical_lines_from_coordinates():
     coordinates = day5.get_vertical_lines_from_coordinates(vent_coords)
     assert len(coordinates) == 2
     assert coordinates[0] == [[2, 1], [2, 2]]
-    assert coordinates[1] == [[7,0], [7, 4]]
+    assert coordinates[1] == [[7, 0], [7, 4]]
 
 
 def test_get_max_x():

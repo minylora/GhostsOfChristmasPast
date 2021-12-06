@@ -14,7 +14,7 @@ DIAGRAM_TYPE = "List[List[int]]"
 # # coords are rearranged so [start, end] always has start as smaller values
 # # does not care if map is square or rectangle
 # # part one - horiz and vert are included and diag are not included
-# # 
+# #
 
 
 def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
@@ -28,76 +28,102 @@ def get_vent_coordinates(filename: str) -> COORDINATE_LIST_TYPE:
     return vent_coords
 
 
-def get_horizontal_lines_from_coordinates(coordinates: COORDINATE_LIST_TYPE) -> COORDINATE_LIST_TYPE:
+def get_horizontal_lines_from_coordinates(
+    coordinates: COORDINATE_LIST_TYPE,
+) -> COORDINATE_LIST_TYPE:
     horizontal_lines = []
     for coord in coordinates:
-        if coord[0][1] == coord[1][1]:
-            if coord[0][0] > coord[1][0]:
-                temp = coord[0][0]
-                coord[0][0] = coord[1][0]
-                coord[1][0] = temp
-            horizontal_lines.append(coord)
+        start_x = coord[0][0]
+        end_x = coord[1][0]
+        start_y = coord[0][1]
+        end_y = coord[1][1]
+        if start_y == end_y:
+            if start_x > end_x:
+                temp = start_x
+                start_x = end_x
+                end_x = temp
+            line_coord = [[start_x, start_y], [end_x, end_y]]
+            horizontal_lines.append(line_coord)
     return horizontal_lines
 
 
-def get_vertical_lines_from_coordinates(coordinates: COORDINATE_LIST_TYPE) -> COORDINATE_LIST_TYPE:
+def get_vertical_lines_from_coordinates(
+    coordinates: COORDINATE_LIST_TYPE,
+) -> COORDINATE_LIST_TYPE:
     vertical_lines = []
     for coord in coordinates:
-        if coord[0][0] == coord[1][0]:
-            if coord[0][1] > coord[1][1]:
-                temp = coord[0][1]
-                coord[0][1] = coord[1][1]
-                coord[1][1] = temp
-            vertical_lines.append(coord)
+        start_x = coord[0][0]
+        end_x = coord[1][0]
+        start_y = coord[0][1]
+        end_y = coord[1][1]
+        if start_x == end_x:
+            if start_y > end_y:
+                temp = start_y
+                start_y = end_y
+                end_y = temp
+            line_coord = [[start_x, start_y], [end_x, end_y]]
+            vertical_lines.append(line_coord)
     return vertical_lines
 
 
 def get_max_x(coordinates: COORDINATE_LIST_TYPE) -> int:
     max_x = 0
     for coord in coordinates:
-        if coord[0][0] > max_x:
-            max_x = coord[0][0]
-        if coord[1][0] > max_x:
-            max_x = coord[1][0]
+        start_x = coord[0][0]
+        end_x = coord[1][0]
+        if start_x > max_x:
+            max_x = start_x
+        if end_x > max_x:
+            max_x = end_x
     return max_x
 
 
 def get_max_y(coordinates: COORDINATE_LIST_TYPE) -> int:
     max_y = 0
     for coord in coordinates:
-        if coord[0][1] > max_y:
-            max_y = coord[0][1]
-        if coord[1][1] > max_y:
-            max_y = coord[1][1]
+        start_y = coord[0][1]
+        end_y = coord[1][1]
+        if start_y > max_y:
+            max_y = start_y
+        if end_y > max_y:
+            max_y = end_y
     return max_y
 
 
 def create_diagram(coordinates: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
     x_len = get_max_x(coordinates) + 1
     y_len = get_max_y(coordinates) + 1
+
+    # Create the initial diagram of all zeros
+    # [0]*x creates list of length x with all 0 values
+    # create list of length y where each value is a list [0]*x
     diagram = [[0] * x_len for y in range(0, y_len)]
     return diagram
 
 
-def update_diagram_horizontally(diagram: DIAGRAM_TYPE, horiz_coords: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
+def update_diagram_horizontally(
+    diagram: DIAGRAM_TYPE, horiz_coords: COORDINATE_LIST_TYPE
+) -> DIAGRAM_TYPE:
     updated_diagram = copy.deepcopy(diagram)
     for line in horiz_coords:
         x1 = line[0][0]
         x2 = line[1][0]
         y = line[0][1]
-        for i in range(x1, x2+1):
-            updated_diagram[y][i] += 1
+        for x in range(x1, x2 + 1):
+            updated_diagram[y][x] += 1
     return updated_diagram
 
 
-def update_diagram_vertically(diagram: DIAGRAM_TYPE, vert_coords: COORDINATE_LIST_TYPE) -> DIAGRAM_TYPE:
+def update_diagram_vertically(
+    diagram: DIAGRAM_TYPE, vert_coords: COORDINATE_LIST_TYPE
+) -> DIAGRAM_TYPE:
     updated_diagram = copy.deepcopy(diagram)
     for line in vert_coords:
         x = line[0][0]
         y1 = line[0][1]
         y2 = line[1][1]
-        for i in range(y1, y2+1):
-            updated_diagram[i][x] += 1
+        for y in range(y1, y2 + 1):
+            updated_diagram[y][x] += 1
     return updated_diagram
 
 
@@ -106,9 +132,9 @@ def calculate_part_one_answer(filename: str) -> int:
     diagram = create_diagram(all_coords)
 
     horiz = get_horizontal_lines_from_coordinates(all_coords)
-    vert = get_vertical_lines_from_coordinates(all_coords)
-
     diagram_horiz = update_diagram_horizontally(diagram, horiz)
+
+    vert = get_vertical_lines_from_coordinates(all_coords)
     updated_diagram = update_diagram_vertically(diagram_horiz, vert)
 
     count = 0
@@ -116,8 +142,6 @@ def calculate_part_one_answer(filename: str) -> int:
         for col in row:
             if col >= 2:
                 count += 1
-
-    print(updated_diagram)
     return count
 
 
