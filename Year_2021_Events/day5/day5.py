@@ -153,6 +153,8 @@ def calculate_part_one_answer(filename: str) -> int:
     diagram = create_diagram(all_coords)
 
     horiz = get_horizontal_lines_from_coordinates(all_coords)
+
+    # all_coords = get_vent_coordinates(filename)
     vert = get_vertical_lines_from_coordinates(all_coords)
 
     diagram = update_diagram_horizontally(diagram=diagram, horiz_coords=horiz)
@@ -170,7 +172,7 @@ def calculate_part_one_answer(filename: str) -> int:
             if col >= 2:
                 count = count + 1
     print(count)
-    print(diagram)
+    print(len(vert))
     return count
 
 
