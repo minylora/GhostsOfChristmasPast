@@ -55,7 +55,7 @@ def how_many_lantern_fish(init_state: List[int], days: int) -> int:
 
         # number of days is reduced by one
         for state in range(0, 8):
-            fish_tracker[state][1] = fish_tracker[state+1][1]
+            fish_tracker[state][1] = fish_tracker[state + 1][1]
 
         # use stored fish count to reset fish and to create new fish
         fish_tracker[6][1] += new_fish

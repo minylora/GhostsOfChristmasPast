@@ -93,4 +93,3 @@ def test_update_diagram_vertically():
 
 def test_calculate_part_one_answer():
     assert day5.calculate_part_one_answer(mini_vents) == 9
-

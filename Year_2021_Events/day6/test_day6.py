@@ -15,4 +15,3 @@ def test_get_initial_state():
 @pytest.mark.parametrize("day, expected_total", expected)
 def test_how_many_lantern_fish(day, expected_total):
     assert day6.how_many_lantern_fish(mini_list, day) == expected_total
-

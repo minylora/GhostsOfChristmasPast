@@ -215,7 +215,7 @@ def part_two(filename):
     diagram = create_diagram(coords)
 
     vert = get_vertical_lines_from_coordinates(coords)
-    horiz =get_horizontal_lines_from_coordinates(coords)
+    horiz = get_horizontal_lines_from_coordinates(coords)
 
     diagram = update_diagram_vertically(diagram, vert)
     diagram = update_diagram_horizontally(diagram, horiz)
