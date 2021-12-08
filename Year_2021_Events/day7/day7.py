@@ -9,14 +9,27 @@ def get_crab_positions(filename: str) -> List[int]:
     return positions
 
 
-def cost_to_align_crabs(initial_positions: List[int]) -> dict:
-    crabs_count = max(initial_positions)
+def constant_cost_to_align_crabs(initial_positions: List[int]) -> dict:
+    crabs_pos_max = max(initial_positions)
     fuel_cost_dict = {}
-    for aligned_position in range(0, crabs_count):
+    for aligned_position in range(0, crabs_pos_max):
         fuel_cost = 0
         for crab in initial_positions:
             fuel_cost += abs(crab - aligned_position)
         fuel_cost_dict[str(aligned_position)] = fuel_cost
+    return fuel_cost_dict
+
+
+def increasing_cost_to_align_crabs(initial_positions: List[int]) -> dict:
+    crabs_pos_max = max(initial_positions)
+    crabs_count = len(initial_positions)
+    fuel_cost_dict = {}
+    for aligned_position in range(0, crabs_pos_max):
+        fuel_cost = 0
+        for i in range(0, crabs_count):
+            diff = abs(initial_positions[i] - aligned_position)
+            fuel_cost += diff * (diff + 1) / 2
+        fuel_cost_dict[str(aligned_position)] = int(fuel_cost)
     return fuel_cost_dict
 
 
@@ -32,12 +45,19 @@ def get_lowest_cost(cost_list: dict) -> int:
 
 def get_part_one(filename: str) -> int:
     pos = get_crab_positions(filename)
-    cost = cost_to_align_crabs(pos)
+    cost = constant_cost_to_align_crabs(pos)
+    return get_lowest_cost(cost)
+
+
+def get_part_two(filename: str) -> int:
+    pos = get_crab_positions(filename)
+    cost = increasing_cost_to_align_crabs(pos)
     return get_lowest_cost(cost)
 
 
 def main():
     print(get_part_one("day7_input.txt"))
+    print(get_part_two("day7_input.txt"))
 
 
 if __name__ == "__main__":
