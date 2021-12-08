@@ -55,9 +55,50 @@ def get_part_two(filename: str) -> int:
     return get_lowest_cost(cost)
 
 
+# one method instead of multiple
+def part_one(filename: str) -> int:
+    initial_positions = get_crab_positions(filename)
+    crabs_pos_max = max(initial_positions)
+    fuel_cost_dict = {}
+    min_cost = None
+    for aligned_position in range(0, crabs_pos_max):
+        fuel_cost = 0
+        for crab in initial_positions:
+            fuel_cost += abs(crab - aligned_position)
+        fuel_cost_dict[str(aligned_position)] = fuel_cost
+        if min_cost:
+            if min_cost > fuel_cost:
+                min_cost = fuel_cost
+        else:
+            min_cost = fuel_cost
+    return min_cost
+
+
+def part_two(filename: str) -> dict:
+    initial_positions = get_crab_positions(filename)
+    crabs_pos_max = max(initial_positions)
+    crabs_count = len(initial_positions)
+    fuel_cost_dict = {}
+    min_cost = None
+    for aligned_position in range(0, crabs_pos_max):
+        fuel_cost = 0
+        for i in range(0, crabs_count):
+            diff = abs(initial_positions[i] - aligned_position)
+            fuel_cost += diff * (diff + 1) / 2
+        fuel_cost_dict[str(aligned_position)] = fuel_cost
+        if min_cost:
+            if min_cost > fuel_cost:
+                min_cost = fuel_cost
+        else:
+            min_cost = fuel_cost
+    return int(min_cost)
+
+
 def main():
     print(get_part_one("day7_input.txt"))
+    print(part_one("day7_input.txt"))
     print(get_part_two("day7_input.txt"))
+    print(part_two("day7_input.txt"))
 
 
 if __name__ == "__main__":
