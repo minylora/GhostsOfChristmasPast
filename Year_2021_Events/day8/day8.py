@@ -3,6 +3,20 @@ from typing import List
 
 from Year_2020_Events.myutils.myutils import get_str_list
 
+LETTERS_LIST = ["a", "b", "c", "d", "e", "f", "g"]
+ORIGINAL_LETTERS_PER_NUMBER = {
+    "0": ["a", "b", "c", "e", "f", "g"],
+    "1": ["c", "f"],
+    "2": ["a", "c", "d", "e", "g"],
+    "3": ["a", "c", "d", "f", "g"],
+    "4": ["b", "c", "d", "f"],
+    "5": ["a", "b", "d", "f", "g"],
+    "6": ["a", "b", "d", "e", "f", "g"],
+    "7": ["a", "c", "f"],
+    "8": ["a", "b", "c", "d", "e", "f", "g"],
+    "9": ["a", "b", "c", "d", "f", "g"],
+}
+
 
 def get_digits(filename: str) -> (List[List[int]], List[List[int]]):
     str_list = get_str_list(filename)
@@ -26,150 +40,104 @@ def part_one(filename: str) -> int:
     return count
 
 
-def generate_regular_number_code() -> dict:
-    numbers = {
-        "0": ["a", "b", "c", "e", "f", "g"],
-        "1": ["c", "f"],
-        "2": ["a", "c", "d", "e", "g"],
-        "3": ["a", "c", "d", "f", "g"],
-        "4": ["b", "c", "d", "f"],
-        "5": ["a", "b", "d", "f", "g"],
-        "6": ["a", "b", "d", "e", "f", "g"],
-        "7": ["a", "c", "f"],
-        "8": ["a", "b", "c", "d", "e", "f", "g"],
-        "9": ["a", "b", "c", "d", "f", "g"],
-    }
-    return numbers
+def get_known_numbers_from_line(pattern_line):
+    known = {}
+    unknown = []
+    for encoded_num in pattern_line:
+        length = len(encoded_num)
+        if length == 2:
+            known["1"] = encoded_num
+        elif length == 3:
+            known["7"] = encoded_num
+        elif length == 4:
+            known["4"] = encoded_num
+        elif length == 7:
+            known["8"] = encoded_num
+        else:
+            unknown.append(encoded_num)
+    return known, unknown
 
 
-def generate_init_regular_letter_code() -> dict:
-    letter_code = {
-        "a": None,
-        "b": None,
-        "c": None,
-        "d": None,
-        "e": None,
-        "f": None,
-        "g": None,
-        "h": None,
-    }
+def get_letter_count(pattern_line):
+    letter_values = [0] * len(LETTERS_LIST)
+    letter_counter = dict(zip(LETTERS_LIST, letter_values))
+    for encoded_num in pattern_line:
+        for letter in encoded_num:
+            letter_counter[letter] += 1
+    return letter_counter
+
+
+def get_letter_code(letter_counter, known):
+    letter_code = {}
+    one = set(known["1"])
+    seven = set(known["7"])
+    letter_code["a"] = list(seven - one)[0]
+
+    d_or_g = []
+    for letter, count in letter_counter.items():
+        if count == 6:
+            letter_code["b"] = letter
+        elif count == 4:
+            letter_code["e"] = letter
+        elif count == 9:
+            letter_code["f"] = letter
+        elif count == 7:
+            d_or_g.append(letter)
+        elif count == 8 and letter is not letter_code["a"]:
+            letter_code["c"] = letter
+
+    for letter in d_or_g:
+        nond = [letter_code["b"], letter_code["c"], letter_code["f"]]
+        if letter in known["4"] and letter not in nond:
+            letter_code["d"] = letter
+        else:
+            letter_code["g"] = letter
     return letter_code
 
 
-def decode(pattern: List[List[int]]):
-    decoder = generate_init_regular_letter_code()
-
-    # make list instead of string
-    weird_letter_code_list = []
-    still_dunno_list = []
-    code_as_list = []
-    new_number_code_list = []
-    for line in pattern:
-        weird_letter_code = {}
-        still_dunno = []
-        for code in line:
-            code_len = len(code)
-            code_list = [i for i in code]
-            if code_len == 2:
-                weird_letter_code["1"] = code_list
-            elif code_len == 3:
-                weird_letter_code["7"] = code_list
-            elif code_len == 4:
-                weird_letter_code["4"] = code_list
-            elif code_len == 7:
-                weird_letter_code["8"] = code_list
-            else:
-                still_dunno.append(code_list)
-            weird_letter_code_list.append(weird_letter_code)
-            still_dunno_list.append(still_dunno)
-            code_as_list.append([i for i in code])
-
-        # count how many of each value exists
-        all_letters = decoder.keys()
-        letter_count = dict(zip(all_letters, [0]*len(all_letters)))
-        for code in line:
-            for letter in code:
-                letter_count[letter] += 1
-
-        # a: 7 has A but 1 does not
-        one = set(weird_letter_code["1"])
-        seven = set(weird_letter_code["7"])
-        decoder["a"] = list(seven - one)
-
-        # b: there are 6 Bs
-        for k, v in letter_count:
-            if v == 6:
-                decoder["b"] = k
-
-        # c: there are 8 Cs, there are 8 As
-            elif v == 8 and k is not "a":
-                decoder["c"] = k
-
-        # e: there are 4 Es
-            elif v == 9:
-                decoder["e"] = k
-
-        # f: there are 9 Fs
-            elif v == 9:
-                decoder["f"] = k
-
-        # d exists in 8 and 4 and is not b
-        for k, v in letter_count:
-            if v == 7 and k is not decoder["b"] and k in weird_letter_code["4"] and k in weird_letter_code["8"]:
-                decoder["d"] = k
-
-        # g is leftover
-        for k, v in decoder:
-            if not v:
-                decoder["g"] = k
-
-        # decoder is done, now build values
-        new_number_code = {}
-        regular_number_codes = generate_regular_number_code()
-        # given decoder and the regular number code - need to create the new number code
-        for number, code in regular_number_codes:
-            for letter in code:
-                new_letter = decoder[letter]
-                new_number_code[number].append(new_letter)
-            new_number_code[number].sort()
-        # list where each item is the new number code for that line
-        new_number_code_list.append(new_number_code)
-    return new_number_code
+def get_number_decoder(letter_code):
+    decoder = {}
+    for number, letters in ORIGINAL_LETTERS_PER_NUMBER.items():
+        new_letters = ""
+        for letter in letters:
+            new_letters = new_letters + letter_code[letter]
+        new_letters = sort_output(new_letters)
+        decoder[new_letters] = int(number)
+    return decoder
 
 
-def get_decoded_output(new_number_code, output):
-    decoded_output = []
-    for value in output:
-        value_list = [i for i in value]
-        value_list.sort()
-        decode = []
-        for number_code in new_number_code:
-            for k, v in number_code:
-                if value_list == v:
-                    decode.append(k)
-    return decoded_output
+def sort_output(output):
+    output_list = [i for i in output]
+    output_list.sort()
+    return "".join(output_list)
 
 
-def get_answer(decoded_output):
+def get_output_number(decoder, output_line):
+    num_list = []
+    for output in output_line:
+        sorted = sort_output(output)
+        num_list.append(str(decoder[sorted]))
+    print(num_list)
+    num_str = "".join(num_list)
+    print(num_str)
+    return int(num_str)
+
+
+def part_two(filename):
     total = 0
-    for output in decoded_output:
-        string_from_list = []
-        for letter in output:
-            string_from_list = string_from_list + letter
-        total += int(string_from_list)
+    patterns, outputs = get_digits(filename)
+    for pattern, output in zip(patterns, outputs):
+        letter_count = get_letter_count(pattern)
+        known, unknown = get_known_numbers_from_line(pattern)
+        letter_code = get_letter_code(letter_count, known)
+        decoder = get_number_decoder(letter_code)
+        total += get_output_number(decoder, output)
     return total
 
 
 def main():
     print(part_one("day8_input.txt"))
-
-    pattern, output = get_digits("day8_input.txt")
-    new_num_code = decode(pattern)
-    decoded_output = get_decoded_output(new_num_code)
-    ans = get_answer(decoded_output)
-    print(ans)
-
-
+    print(part_two("day8_input.txt"))
 
 
 if __name__ == "__main__":
