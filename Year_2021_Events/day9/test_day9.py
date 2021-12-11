@@ -4,7 +4,6 @@ from . import day9
 
 mini_basin = r"C:\Users\Mindy\Documents\CodeyCode\GhostsOfChristmasPast\Year_2021_Events\day9\mini_map"
 basin = day9.get_basin(mini_basin)
-
 corners = [
     [0, 0],
     [0, 9],
@@ -36,6 +35,18 @@ middle = [
 surrounds_inner = [
     [[1, 0], [1, 2], [0, 1], [2, 1]],
     [[3, 7], [3, 9], [2, 8], [4, 8]],
+]
+expected_low_points = [
+    [0, 1],
+    [0, 9],
+    [2, 2],
+    [4, 6],
+]
+not_nine = [
+    1,
+    2,
+    4,
+    3,
 ]
 
 
@@ -89,3 +100,19 @@ def test_get_surrounding_points_inside(locs, expected):
 
 def test_calculate_part_one():
     assert day9.calculate_part_one(mini_basin) == 15
+
+
+def test_get_low_points():
+    results = day9.get_low_points(basin)
+    assert len(results) == 4
+    assert results == expected_low_points
+
+
+def test_calculate_part_one_with_get_low_points():
+    assert day9.calculate_part_one_with_get_low_points(mini_basin) == 15
+
+
+@pytest.mark.parametrize("locs, lengths", zip(expected_low_points, not_nine))
+def test_get_surrounding_points_that_arent_nine(locs, lengths):
+    results = day9.get_surrounding_points_that_arent_nine(basin, locs)
+    assert len(results) == lengths

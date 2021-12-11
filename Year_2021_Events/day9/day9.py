@@ -105,9 +105,63 @@ def calculate_part_one(filename: str) -> int:
     return total
 
 
+def get_low_points(basin: BASIN_TYPE) -> List[LOC_TYPE]:
+    low_points = []
+    for row_loc in range(0, len(basin)):
+        for col_loc in range(len(basin[0])):
+            surrounding_points = get_surrounding_points(basin, row_loc, col_loc)
+            point_height = basin[row_loc][col_loc]
+            lowest = True
+            for point in surrounding_points:
+                rloc = point[0]
+                cloc = point[1]
+                if point_height >= basin[rloc][cloc]:
+                    lowest = False
+                    break
+            if lowest:
+                low_points.append([row_loc, col_loc])
+    return low_points
+
+
+def calculate_part_one_with_get_low_points(filename: str) -> int:
+    basin = get_basin(filename)
+    low_points = get_low_points(basin)
+    total = 0
+    for point in low_points:
+        total += 1 + basin[point[0]][point[1]]
+    return total
+
+
+def get_surrounding_points_that_arent_nine(basin: BASIN_TYPE, low_point: LOC_TYPE) -> List[LOC_TYPE]:
+    row = low_point[0]
+    col = low_point[1]
+    surrounding_points = get_surrounding_points(basin, row, col)
+    not_nine = []
+    for point in surrounding_points:
+        row = point[0]
+        col = point[1]
+        if basin[row][col] < 9:
+            not_nine.append([row, col])
+    return not_nine
+
+
+def get_basin_locs_for_low_point(basin: BASIN_TYPE, low_point: LOC_TYPE):
+    surrounding_points = get_surrounding_points_that_arent_nine(basin, low_point)
+    part_of_the_basin = [low_point] + surrounding_points
+    basin_set = set(part_of_the_basin)
+
+
+
+
+def calculate_part_two(filename: str) -> int:
+    pass
+
+
 def main():
-    part_one = calculate_part_one("dayy9_input.txt")
+    part_one = calculate_part_one_with_get_low_points("dayy9_input.txt")
     print(part_one)
+    part_two = calculate_part_two("dayy9_input.txt")
+    print(part_two)
 
 
 if __name__ == "__main__":
