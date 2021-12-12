@@ -68,55 +68,63 @@ def calc_part_one(filename: str) -> int:
 def get_incomplete_line_score(line: str):
     start_i = 0
     open_chars = []
+    line_length = len(line)
 
-    while start_i < len(line):
+    while start_i < line_length:
         i = start_i
 
         # stop at first closing char
         no_close = True
-        while i < len(line) and no_close:
-            if line[i] in CLOSINGS:
+        while i < line_length and no_close:
+            char = line[i]
+            if char in CLOSINGS:
                 no_close = False
             else:
-                open_chars.append(line[i])
+                open_chars.append(char)
             i += 1
 
         i -= 1
-        while len(open_chars) > 0 and i < len(line):
+        while len(open_chars) > 0 and i < line_length:
             last_open_char = open_chars[-1]
-
+            char = line[i]
             # its the correct closing char
-            if line[i] == CLOSING_CHAR[last_open_char]:
+            if char == CLOSING_CHAR[last_open_char]:
                 open_chars.pop()
             # its a new open char
-            elif line[i] in OPENINGS:
+            elif char in OPENINGS:
                 open_chars.append(line[i])
             # its invalid
-            elif line[i] in CLOSINGS:
+            elif char in CLOSINGS:
                 return None
             else:
                 raise ValueError
             i += 1
-        start_i = i
+
+        # either reached the end or a chunk correctly ended before line ended
+        if len(open_chars) == 0:
+            start_i = i
+        else:
+            start_i = line_length
 
     # now create the rest and score
     total = 0
-    for k in range(len(open_chars)-1, -1, -1):
-        char = open_chars[k]
-        total = 5 * total + COMPLETE_MATHS[char]
-
+    num_char_still_open = len(open_chars)
+    if num_char_still_open > 0:
+        for i in range(num_char_still_open-1, -1, -1):
+            char = open_chars[i]
+            total = 5 * total + COMPLETE_MATHS[char]
     return total
 
 
 def calculate_incomplete_issues(all_lines: List[str]):
-    total = []
+    all_scores = []
     for line in all_lines:
         score = get_incomplete_line_score(line)
         if score:
-            total.append(score)
-    total.sort()
-    middle = round(len(total)/2)
-    return total[middle]
+            all_scores.append(score)
+    all_scores.sort()
+    middle = round(len(all_scores)/2)
+    return all_scores[middle]
 
 
 def calc_part_two(filename: str) -> int:
