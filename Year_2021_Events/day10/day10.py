@@ -8,7 +8,7 @@ CLOSINGS = [")", "]", "}", ">"]
 CLOSING_CHAR = dict(zip(OPENINGS, CLOSINGS))
 CLOSINGS_1 = CLOSINGS + [""]
 MATHS = [3, 57, 1197, 25137, 0]
-BAD_MATH = dict(zip(CLOSINGS, MATHS))
+BAD_MATH = dict(zip(CLOSINGS_1, MATHS))
 NEW_MATHS = [1, 2, 3, 4]
 COMPLETE_MATHS = dict(zip(OPENINGS, NEW_MATHS))
 
@@ -77,8 +77,10 @@ def get_incomplete_line_score(line: str):
         no_close = True
         while i < line_length and no_close:
             char = line[i]
+            # char is close char
             if char in CLOSINGS:
                 no_close = False
+            # char is an open char
             else:
                 open_chars.append(char)
             i += 1
@@ -92,8 +94,8 @@ def get_incomplete_line_score(line: str):
                 open_chars.pop()
             # its a new open char
             elif char in OPENINGS:
-                open_chars.append(line[i])
-            # its invalid
+                open_chars.append(char)
+            # line is invalid
             elif char in CLOSINGS:
                 return None
             else:
@@ -106,7 +108,7 @@ def get_incomplete_line_score(line: str):
         else:
             start_i = line_length
 
-    # now create the rest and score
+    # create the new chars and calculate the score
     total = 0
     num_char_still_open = len(open_chars)
     if num_char_still_open > 0:
@@ -123,7 +125,7 @@ def calculate_incomplete_issues(all_lines: List[str]):
         if score:
             all_scores.append(score)
     all_scores.sort()
-    middle = round(len(all_scores)/2)
+    middle = int((len(all_scores)-1)/2)
     return all_scores[middle]
 
 
