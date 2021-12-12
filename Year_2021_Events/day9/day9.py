@@ -145,22 +145,27 @@ def get_surrounding_points_that_arent_nine(basin: BASIN_TYPE, low_point: LOC_TYP
     return not_nine
 
 
-def get_basin_locs_for_low_point(basin: BASIN_TYPE, low_point: LOC_TYPE):
+def get_basin_size_for_a_low_point(basin: BASIN_TYPE, low_point: LOC_TYPE) -> int:
     surrounding_points = get_surrounding_points_that_arent_nine(basin, low_point)
     part_of_the_basin = [low_point] + surrounding_points
     basin_set = set(part_of_the_basin)
 
 
-
-
 def calculate_part_two(filename: str) -> int:
-    pass
+    basin_values = get_basin(filename)
+    low_points = get_low_points(basin_values)
+    basin_sizes = []
+    for point in low_points:
+        sz = get_basin_size_for_a_low_point(basin_values, point)
+        basin_sizes.append(sz)
+    basin_sizes.sort(reverse=True)
+    return basin_sizes[0] * basin_sizes[1] * basin_sizes[2]
 
 
 def main():
-    part_one = calculate_part_one_with_get_low_points("dayy9_input.txt")
+    part_one = calculate_part_one_with_get_low_points("day9_input.txt")
     print(part_one)
-    part_two = calculate_part_two("dayy9_input.txt")
+    part_two = calculate_part_two("day9_input.txt")
     print(part_two)
 
 

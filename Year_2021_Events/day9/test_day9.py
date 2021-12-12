@@ -42,12 +42,8 @@ expected_low_points = [
     [2, 2],
     [4, 6],
 ]
-not_nine = [
-    1,
-    2,
-    4,
-    3,
-]
+not_nine = [1, 2, 4, 3]
+basin_sizes = [3, 9, 14, 9]
 
 
 def test_get_basin():
@@ -116,3 +112,12 @@ def test_calculate_part_one_with_get_low_points():
 def test_get_surrounding_points_that_arent_nine(locs, lengths):
     results = day9.get_surrounding_points_that_arent_nine(basin, locs)
     assert len(results) == lengths
+
+
+@pytest.mark.parametrize("low_point, expected", zip(expected_low_points, basin_sizes))
+def test_get_basin_size_for_a_low_point(low_point, expected):
+    assert day9.get_basin_size_for_a_low_point(basin, low_point) == expected
+
+
+def test_calculate_part_two():
+    assert day9.calculate_part_two(mini_basin) == 1134
