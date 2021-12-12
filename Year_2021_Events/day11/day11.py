@@ -90,10 +90,22 @@ def take_x_steps(energy_grid: ENERGY_TYPE, x_steps: int) -> int:
     return total_flashes
 
 
+def get_first_flash_sync(energy_grid: ENERGY_TYPE) -> int:
+    num_steps = 1
+    all_octos = OCTOPUS_ROWS * OCTOPUS_COLS
+    octo_energy, num_flashes = take_a_step(energy_grid)
+    while num_flashes != all_octos:
+        octo_energy, num_flashes = take_a_step(octo_energy)
+        num_steps += 1
+    return num_steps
+
+
 def main():
     octo_grid = get_list_of_int_lists("day11_input.txt")
     part_one = take_x_steps(octo_grid, 100)
     print(part_one)
+    part_two = get_first_flash_sync(octo_grid)
+    print(part_two)
 
 
 if __name__ == "__main__":

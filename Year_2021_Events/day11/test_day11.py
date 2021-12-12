@@ -28,3 +28,7 @@ def test_take_10_steps():
 
 def test_take_100_steps():
     assert day11.take_x_steps(mini_energy, 100) == 1656
+
+
+def test_get_first_flash_sync():
+    assert day11.get_first_flash_sync(mini_energy) == 195
