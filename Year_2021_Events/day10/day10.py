@@ -66,50 +66,56 @@ def calc_part_one(filename: str) -> int:
 
 
 def get_incomplete_line_score(line: str):
-    i = 0
-    complete_char = []
+    start_i = 0
     open_chars = []
 
-    # stop at first closing char
-    no_close = True
-    while i < len(line) and no_close:
-        if line[i] in CLOSINGS:
-            no_close = False
-        else:
-            open_chars.append(line[i])
-        i += 1
+    while start_i < len(line):
+        i = start_i
 
-    i -= 1
-    while len(open_chars) > 0 and i < len(line):
-        last_open_char = open_chars[-1]
+        # stop at first closing char
+        no_close = True
+        while i < len(line) and no_close:
+            if line[i] in CLOSINGS:
+                no_close = False
+            else:
+                open_chars.append(line[i])
+            i += 1
 
-        # its the correct closing char
-        if line[i] == CLOSING_CHAR[last_open_char]:
-            open_chars.pop()
-        # its a new open char
-        elif line[i] in OPENINGS:
-            open_chars.append(line[i])
-        else:
-            raise ValueError
-        i += 1
+        i -= 1
+        while len(open_chars) > 0 and i < len(line):
+            last_open_char = open_chars[-1]
+
+            # its the correct closing char
+            if line[i] == CLOSING_CHAR[last_open_char]:
+                open_chars.pop()
+            # its a new open char
+            elif line[i] in OPENINGS:
+                open_chars.append(line[i])
+            # its invalid
+            elif line[i] in CLOSINGS:
+                return None
+            else:
+                raise ValueError
+            i += 1
+        start_i = i
 
     # now create the rest and score
     total = 0
-    for i in range(len(open_chars)-1, -1, -1):
-        char = open_chars[i]
+    for k in range(len(open_chars)-1, -1, -1):
+        char = open_chars[k]
         total = 5 * total + COMPLETE_MATHS[char]
+
     return total
 
 
 def calculate_incomplete_issues(all_lines: List[str]):
     total = []
     for line in all_lines:
-        invalid_char = get_invalid_char(line)
-        # if incomplete
-        if invalid_char is None:
-            total.append(get_incomplete_line_score(line))
+        score = get_incomplete_line_score(line)
+        if score:
+            total.append(score)
     total.sort()
-    middle = round(len(total)/2) + 1
+    middle = round(len(total)/2)
     return total[middle]
 
 

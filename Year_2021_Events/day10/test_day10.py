@@ -36,6 +36,15 @@ corrupted = [
 # invalid    [<(<(<(<{}))><([]([]()
 # invalid    <{([([[(<>()){}]>(<<{{
 # incomplete    <{([{{}}[<[[[<>{}]]]>[]]
+lines = [
+    "[({(<(())[]>[[{[]{<()<>>",
+    "[(()[<>])]({[<{<<[]>>(",
+    "(((({<>}<{<{<>}{[]{[]{}",
+    "{<[[]]>}<{[{[{[]{()[[[]",
+    "<{([{{}}[<[[[<>{}]]]>[]]",
+
+]
+scores = [288957, 5566, 1480781, 995444, 294]
 
 
 def test_part_one():
@@ -52,7 +61,6 @@ def test_calc_part_two():
     assert day10.calc_part_two(mini_chunks_path) == 288957
 
 
-def test_get_incomplete_line_score():
-    line = "<{([{{}}[<[[[<>{}]]]>[]]"
-    results = day10.get_incomplete_line_score(line)
-    assert results == 294
+@pytest.mark.parametrize("line, score", zip(lines, scores))
+def test_get_incomplete_line_score(line, score):
+    assert day10.get_incomplete_line_score(line) == score
