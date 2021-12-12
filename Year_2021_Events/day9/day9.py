@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 
 from Year_2020_Events.myutils.myutils import get_str_list
 
@@ -18,7 +18,7 @@ def get_basin(filename: str) -> BASIN_TYPE:
 def is_edge(basin: BASIN_TYPE, row_loc: int, col_loc: int) -> bool:
     basin_row_count = len(basin)
     basin_col_count = len(basin[0])
-    if row_loc == 0 or row_loc == basin_row_count - 1 or col_loc == 0 or col_loc == basin_col_count -1:
+    if row_loc == 0 or row_loc == basin_row_count - 1 or col_loc == 0 or col_loc == basin_col_count - 1:
         return True
     return False
 
@@ -146,9 +146,42 @@ def get_surrounding_points_that_arent_nine(basin: BASIN_TYPE, low_point: LOC_TYP
 
 
 def get_basin_size_for_a_low_point(basin: BASIN_TYPE, low_point: LOC_TYPE) -> int:
-    surrounding_points = get_surrounding_points_that_arent_nine(basin, low_point)
-    part_of_the_basin = [low_point] + surrounding_points
-    basin_set = set(part_of_the_basin)
+    basin_rows = len(basin)
+    basin_cols = len(basin[0])
+
+    # init the 3 things
+    need_to_check = [low_point]
+    already_checked = [[0]*basin_cols for i in range(0, basin_rows)]
+    basin_values = []
+
+    while len(need_to_check) > 0:
+        current_point = need_to_check[0]
+        current_point_row = current_point[0]
+        current_point_col = current_point[1]
+
+        # if point not checked, then check the point
+        if already_checked[current_point_row][current_point_col] == 0:
+
+            # if point value is not 9 then add to basin values
+            if basin[current_point_row][current_point_col] < 9:
+                basin_values.append(current_point)
+
+            # check if there are surrounding points
+            not_nine = get_surrounding_points_that_arent_nine(basin, current_point)
+
+            # add new points if they need to be
+            for point in not_nine:
+                point_row = point[0]
+                point_col = point[1]
+                if point not in need_to_check and already_checked[point_row][point_col] == 0:
+                    need_to_check.append(point)
+
+            # mark the point as checked and remove from need to check
+            already_checked[current_point_row][current_point_col] = 1
+            need_to_check.pop(0)
+
+    # return size of basin
+    return len(basin_values)
 
 
 def calculate_part_two(filename: str) -> int:
